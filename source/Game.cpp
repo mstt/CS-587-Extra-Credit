@@ -1,10 +1,15 @@
 #include "../headers/Game.h"
+#include <stdlib.h>
 
 /** Public **/
 void Game::Setup( SessionData* data )
 {
 	// @TODO: parse information from SessionData for initial game state
 	printf( "Initializing game state" );
+
+	//Create world
+	world = new World(data->worldWidth, data->worldHeight);
+	world->Setup();
 	
 	int hunterCount = data->actorCounts[EActorTypes::HUNTER];
 	int dodoCount  = data->actorCounts[EActorTypes::DODO];
@@ -15,18 +20,21 @@ void Game::Setup( SessionData* data )
 	int i = 0;
 	for(i; i < hunterCount; i++)
 	{
+		PlaceActorInWorld(&actors[i]);
+
 		//assign actor a hunter controller
-		//place actor
 	}
 	for(i; i < hunterCount + dodoCount; i++)
 	{
+		PlaceActorInWorld(&actors[i]);
+
 		//assign actor a dodo controller
-		//place actor
 	}
 	for(i; i < hunterCount + dodoCount + foxCount; i++)
 	{
+		PlaceActorInWorld(&actors[i]);
+
 		//assign actor a fox controller
-		//place actor
 	}
 }
 
@@ -53,7 +61,7 @@ void Game::HandleFrame()
 {
 	for(int i = 0; i < actorCount; i++)
 	{
-		// act
+		// move actors
 	}
 }
 
@@ -62,4 +70,23 @@ void Game::EndGame()
 	isActive = false;
 
 	printf( "Game has ended" );
+
+	//Free memory
+	delete[] actors;
+}
+
+void Game::PlaceActorInWorld(Actor* actor)
+{
+	int x = rand() % world->worldWidth;
+	int y = rand() % world->worldHeight;
+
+	while(world->GetActorAt(x, y) != NULL)
+	{
+		x = rand() % world->worldWidth;
+		y = rand() % world->worldHeight;
+	}
+
+	actor->x = x;
+	actor->y = y;
+	world->AddActorToWorld(actor);
 }

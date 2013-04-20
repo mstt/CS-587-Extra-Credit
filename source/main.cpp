@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include "../headers/Game.h"
 #include "../headers/ActorTypes.h"
 
@@ -7,6 +9,8 @@
 **/
 int main( int argc, char* argv[] )
 {
+	srand(time(NULL));
+
 	Game game;
 
 	// @NOTE: This is just an example setup of session data, this can and will change when

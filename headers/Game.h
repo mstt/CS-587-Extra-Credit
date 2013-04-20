@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "SessionData.h"
 #include "Actor.h"
+#include "World.h"
 
 /*
 	Game
@@ -23,9 +24,13 @@ private:
 	Actor* actors;						// Array of actors in memory (feel free to change this to another data structure)
 	int actorCount;						// Count of actors in the actors array
 
+	World* world;
+
 	/* Functions */
 	void HandleFrame();					// Runs logic needed per-frame
 	void EndGame();						// Stops game execution
+
+	void PlaceActorInWorld(Actor* actor);	//Helper function called in Setup()
 };
 
 #endif
