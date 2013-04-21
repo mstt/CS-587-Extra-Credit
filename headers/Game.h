@@ -5,7 +5,7 @@
 #include "SessionData.h"
 #include "Actor.h"
 #include "World.h"
-#include "ActorController.h"
+#include "controller/ActorController.h"
 
 /*
 	Game

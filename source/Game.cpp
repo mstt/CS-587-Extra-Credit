@@ -1,7 +1,7 @@
 #include "../headers/Game.h"
-#include "../headers/HunterController.h"
-#include "../headers/DodoController.h"
-#include "../headers/FoxController.h"
+#include "../headers/controller/HunterController.h"
+#include "../headers/controller/DodoController.h"
+#include "../headers/controller/FoxController.h"
 #include <stdlib.h>
 #include <iostream>
 using namespace std;
@@ -73,23 +73,16 @@ void Game::Execute()
 /** Private **/
 void Game::HandleFrame()
 {
-	printf("\nhandle frame");
 	int i, j;
 	for(i = 0; i < actorCount; i++)
 	{
-		printf("\ngetting next position for controller number %i", i);
 		int oldX = actors[i].x;
 		int oldY = actors[i].y;
 		Point p = controllers[i]->GetNextPosition();
 		while(world->PointIsInWorld(p.x, p.y) == false)
 		{
-			printf("\n x=%i, y=%i", p.x, p.y);
 			p = controllers[i]->GetNextPosition();
-			//cin >> j;
 		}
-
-		printf("\nmoving from %i,%i to %i,%i", oldX, oldY, p.x, p.y);
-		//controllers[i]->MoveTo(p.x, p.y);
 
 		Actor* actorToRemove = world->MoveActorInWorld(oldX, oldY, p.x, p.y);
 		if(actorToRemove != NULL)
@@ -97,12 +90,14 @@ void Game::HandleFrame()
 			int i;
 			for(i = 0; i < actorCount; i++)
 			{
-				//if(controllers[i]->
+				if(controllers[i]->getActor() == actorToRemove)
+				{
+				}
 			}
 			//delete actorToRemove;
 		}
 
-		printf("\nmoved to %i,%i", actors[i].x, actors[i].y);
+		//printf("\nmoved to %i,%i", actors[i].x, actors[i].y);
 	}
 
 	world->printWorld();
