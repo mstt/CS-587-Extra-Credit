@@ -40,7 +40,41 @@ Actor* World::GetActorAt(int x, int y)
 
 Actor** World::GetActorsNear(int x, int y, int range)
 {
-	return NULL;
+	Actor** actorsNear;
+	int numActors = 0;
+	int i, j;
+
+	//First find out how many actors are within range
+	for(i = x - range; i < range; i++)
+	{
+		for(j = y - range; j < range; j++)
+		{
+			if(PointIsInWorld(i, j) && GetActorAt(i, j) != NULL)
+			{
+				++numActors;
+			}
+		}
+	}
+
+	if(numActors == 0)
+		return NULL;
+
+	actorsNear = new Actor*[numActors];
+
+	//Now add actors to array
+	int index = 0;
+	for(i = x - range; i < range; i++)
+	{
+		for(j = y - range; j < range; j++)
+		{
+			if(PointIsInWorld(i, j) && GetActorAt(i, j) != NULL)
+			{
+				actorsNear[index++] = GetActorAt(i, j);
+			}
+		}
+	}
+
+	return actorsNear;
 }
 
 void World::AddActorToWorld(Actor* actor)

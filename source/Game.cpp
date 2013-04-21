@@ -80,10 +80,10 @@ void Game::HandleFrame()
 		int oldX = actors[i].x;
 		int oldY = actors[i].y;
 		Point p = controllers[i]->GetNextPosition();
-		while(World::GetInstance()->PointIsInWorld(p.x, p.y) == false)
+		/*while(World::GetInstance()->PointIsInWorld(p.x, p.y) == false)
 		{
 			p = controllers[i]->GetNextPosition();
-		}
+		}*/
 
 		Actor* actorToRemove = World::GetInstance()->MoveActorInWorld(oldX, oldY, p.x, p.y);
 		if(actorToRemove != NULL)

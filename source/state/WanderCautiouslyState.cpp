@@ -4,19 +4,27 @@
 /** Public **/
 void WanderCautiouslyState::Update()
 {
-	// TODO - query world, and start to run away if enemy is near
+	// Run away if other actors are near
+	Actor** actorsNear = World::GetInstance()->GetActorsNear(actor->x, actor->y, 2);
+
+	if(actorsNear != NULL)
+	{
+		nextState = "RunAwayState";
+		delete[] actorsNear;
+	}
 }
 
 Point WanderCautiouslyState::GetNextPosition()
 {
 	Point p;
-	p.x = actor->x + (rand() % 2 - 1);
-	p.y = actor->y + (rand() % 2 - 1);
 
-	while(p.x == actor->x && p.y == actor->y && p.x > 0 && p.x < World::GetInstance()->worldWidth && p.y > 0 && p.y < World::GetInstance()->worldHeight)
+	while(true)
 	{
-		p.x = actor->x + (rand() % 2 - 1);
-		p.y = actor->y + (rand() % 2 - 1);
+		p.x = actor->x + (rand() % 3 - 1);
+		p.y = actor->y + (rand() % 3 - 1);
+
+		if((p.x != actor->x || p.y != actor->y) && (p.x > 0 && p.x < World::GetInstance()->worldWidth - 1 && p.y > 0 && p.y < World::GetInstance()->worldHeight - 1))
+			break;
 	}
 
 	return p;

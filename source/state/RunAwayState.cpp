@@ -1,21 +1,33 @@
 #include "../headers/state/RunAwayState.h"
+#include "../headers/World.h"
 
 /** Public **/
 void RunAwayState::Update()
 {
-	// TODO - query world, if no enemies around, switch to WanderCautiouslyState
+	// If no actors around, switch to WanderCautiouslyState
+	Actor** actorsNear = World::GetInstance()->GetActorsNear(actor->x, actor->y, 2);
+
+	if(actorsNear == NULL)
+	{
+		nextState = "WanderCautiouslyState";
+	}
+	else
+	{
+		delete[] actorsNear;
+	}
 }
 
 Point RunAwayState::GetNextPosition()
 {
 	Point p;
-	p.x = actor->x + (rand() % 2 - 1);
-	p.y = actor->y + (rand() % 2 - 1);
 
-	while(p.x == actor->x && p.y == actor->y)
+	while(true)
 	{
-		p.x = actor->x + (rand() % 2 - 1);
-		p.y = actor->y + (rand() % 2 - 1);
+		p.x = actor->x + (rand() % 3 - 1);
+		p.y = actor->y + (rand() % 3 - 1);
+
+		if(World::GetInstance()->PointIsInWorld(p.x, p.y) && (p.x != actor->x || p.y != actor->y))
+			break;
 	}
 
 	return p;
