@@ -19,7 +19,8 @@ void Game::Setup( SessionData* data )
 	hunterCount = data->actorCounts[EActorTypes::HUNTER];
 	dodoCount  = data->actorCounts[EActorTypes::DODO];
 	foxCount   = data->actorCounts[EActorTypes::FOX];
-	actorCount = hunterCount + dodoCount + foxCount;
+	initialActorCount = actorCount = hunterCount + dodoCount + foxCount;
+	turns = 0;
 
 	//Create actor and controller arrays
 	actors = new Actor[actorCount];
@@ -74,7 +75,7 @@ void Game::HandleFrame()
 {
 	//printf("handle frame");
 	int i, j;
-	for(i = 0; i < actorCount; i++)
+	for(i = 0; i < initialActorCount; i++)
 	{
 		if(controllers[i]->GetActor()->alive == false)
 			continue;
@@ -97,6 +98,7 @@ void Game::HandleFrame()
 	}
 
 	World::GetInstance()->printWorld();
+	++turns;
 	//cin >> j;
 }
 
@@ -104,7 +106,7 @@ void Game::EndGame()
 {
 	isActive = false;
 
-	printf( "Game has ended" );
+	printf("Game has ended\nIt took %i turns.", turns);
 
 	int i;
 	cin >> i;
@@ -131,7 +133,7 @@ void Game::PlaceActorInWorld(Actor* actor)
 
 void Game::RemoveActorFromWorld(Actor* actor)
 {
-	printf("\nkilling actor");
+	//printf("\nkilling actor");
 	actor->alive = false;
 	--actorCount;
 }

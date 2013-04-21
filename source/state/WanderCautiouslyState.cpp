@@ -22,9 +22,6 @@ void WanderCautiouslyState::Update()
 
 Point WanderCautiouslyState::GetNextPosition()
 {
-	actor->GetPotentialMoves();
-
-
 	Point p;
 
 	while(true)

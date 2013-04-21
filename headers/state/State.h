@@ -29,6 +29,7 @@ public:
 	void Setup();
 	virtual void Update() {}
 	virtual Point GetNextPosition() = 0;
+	virtual int evaluatePosition(int newX, int newY, int range) { return 0; };		//Evaluates new position based off actors near current position
 
 	string getName() const { return name; }
 	int getStatus() const { return status; }

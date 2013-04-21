@@ -24,10 +24,12 @@ private:
 	bool isActive;						// Flag indicating whether the game will continue or not
 	Actor* actors;						// Array of actors in memory
 	ActorController** controllers;		// Array of controllers in memory
-	int actorCount;						// Count of actors in the actors array
+	int initialActorCount;				// Count of actors in the actors array
+	int actorCount;						// Count of actors in the actors array that are alive
 	int hunterCount;
 	int dodoCount;
 	int foxCount;
+	int turns;							
 
 	/* Functions */
 	void HandleFrame();					// Runs logic needed per-frame

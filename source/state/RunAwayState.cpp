@@ -1,5 +1,6 @@
 #include "../headers/state/RunAwayState.h"
 #include "../headers/World.h"
+#include "../headers/ActorTypes.h"
 #include <math.h>
 
 /** Public **/
@@ -21,39 +22,64 @@ void RunAwayState::Update()
 
 Point RunAwayState::GetNextPosition()
 {
-	Actor** actorsNear = World::GetInstance()->GetActorsNear(actor->x, actor->y, 2, numActorsNear);
-	Point p;
+	Point p(actor->x, actor->y);
 
-	// Move away from actors
-	int xDiff = 0, yDiff = 0;
-	int i;
-	for(i = 0; i < numActorsNear; i++)
-	{
-		xDiff += actor->x - actorsNear[i]->x;
-		yDiff += actor->y - actorsNear[i]->y;
-	}
+	actor->GetPotentialMoves();
+	int numMoves = actor->potentialMoves.size();
 
-	if(xDiff != 0) xDiff /= abs(xDiff);
-	if(yDiff != 0) yDiff /= abs(yDiff);
+	// If no moves available, don't move
+	if(numMoves < 1)
+		return Point(actor->x, actor->y);
 
-	if(xDiff != 0 || yDiff != 0)
+	int i, bestMoveIndex, bestMoveScore;
+	for(i = 0, bestMoveIndex = 0, bestMoveScore = -9999; i < numMoves; i++)
 	{
-		xDiff /= abs(xDiff);
-		yDiff /= abs(yDiff);
-	}
-	else
-	{
-		while(true)
+		int moveScore = evaluatePosition(actor->potentialMoves[i].x, actor->potentialMoves[i].y, 2);
+
+		if(moveScore > bestMoveScore)
 		{
-			p.x = actor->x + (rand() % 3 - 1);
-			p.y = actor->y + (rand() % 3 - 1);
-
-			if(World::GetInstance()->PointIsInWorld(p.x, p.y) && (p.x != actor->x || p.y != actor->y))
-				break;
+			bestMoveScore = moveScore;
+			bestMoveIndex = i;
 		}
 	}
 
-	return p;
+	return actor->potentialMoves[bestMoveIndex];
+}
+
+int RunAwayState::evaluatePosition(int newX, int newY, int range)
+{
+	int score = 0;
+
+	// If hunter is at position, it is worst possible move
+	if(World::GetInstance()->GetActorAt(newX, newY) != NULL && World::GetInstance()->GetActorAt(newX, newY)->type == EActorTypes::HUNTER)
+		return -1000000;
+
+	int i, j;
+	for(i = actor->x - range; i < range; i++)
+	{
+		for(j = actor->y - range; j < range; j++)
+		{
+			//Avoid corners
+			if(World::GetInstance()->IsInCornerWithRange(i, j, 2))
+				score -= 1;
+
+			if(World::GetInstance()->GetActorAt(i, j) != NULL)
+			{
+				Actor* actorNear = World::GetInstance()->GetActorAt(i, j);
+
+				if(actorNear->type == EActorTypes::HUNTER)
+				{
+					score -= 5;
+				}
+				else
+				{
+					score += 2;
+				}
+			}
+		}
+	}
+
+	return score;
 }
 
 RunAwayState::~RunAwayState()

@@ -36,6 +36,7 @@ public:
 	Actor* MoveActorInWorld(int x, int y, int newX, int newY);	//Returns actor that was consumed or NULL if nothing was consumed
 	void RemoveActorFromWorld(Actor* actor);
 	bool PointIsInWorld(int x, int y);
+	bool IsInCornerWithRange(int x, int y, int range);
 	void printWorld();
 };
 

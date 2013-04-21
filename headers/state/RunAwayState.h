@@ -21,6 +21,7 @@ public:
 
 	void Update();
 	Point GetNextPosition();
+	int evaluatePosition(int newX, int newY, int range);
 };
 
 #endif

@@ -121,7 +121,7 @@ void World::AddActorToWorld(Actor* actor)
 
 Actor* World::MoveActorInWorld(int x, int y, int newX, int newY)
 {
-	printf("\nmoving actor in world from %i,%i to %i,%i", x, y, newX, newY);
+	//printf("\nmoving actor in world from %i,%i to %i,%i", x, y, newX, newY);
 	Actor* actorThatIsMoving = cells[x * worldWidth + y];
 	Actor* actorAtNewCell = cells[newX * worldWidth + newY];
 	Actor* actorThatIsConsumed = NULL;
@@ -129,10 +129,10 @@ Actor* World::MoveActorInWorld(int x, int y, int newX, int newY)
 	// If an actor is going to be consumed
 	if(actorAtNewCell != NULL)
 	{
-		printf("\nsetting consumed");
+		//printf("\nsetting consumed");
 		if(actorThatIsMoving->type == EActorTypes::HUNTER)
 		{
-			printf("\nconsuming");
+			//printf("\nconsuming");
 			actorThatIsConsumed = actorAtNewCell;
 			cells[newX * worldWidth + newY] = cells[x * worldWidth + y];
 			cells[newX * worldWidth + newY]->x = newX;
@@ -140,7 +140,7 @@ Actor* World::MoveActorInWorld(int x, int y, int newX, int newY)
 		}
 		else if(actorAtNewCell->type == EActorTypes::HUNTER)
 		{
-			printf("\nbeing consumed");
+			//printf("\nbeing consumed");
 			actorThatIsConsumed = actorThatIsMoving;
 		}
 		else
@@ -169,6 +169,12 @@ void World::RemoveActorFromWorld(Actor* actor)
 bool World::PointIsInWorld(int x, int y)
 {
 	return x >= 0 && x < worldWidth && y >= 0 && y < worldHeight;
+}
+
+bool World::IsInCornerWithRange(int x, int y, int range)
+{
+	return (x < range && y < range) || (x < range && y >= worldHeight - range) ||
+		   (x >= worldWidth - range && y < range) || (x >= worldWidth - range && y >= worldHeight - range);
 }
 
 void World::printWorld()
