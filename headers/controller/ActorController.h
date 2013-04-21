@@ -28,7 +28,7 @@ public:
 	void MoveTo(int x, int y) { actor->x = x; actor->y = y; }
 	Point GetNextPosition() { return currentState->GetNextPosition(); }
 
-	Actor* getActor() { return actor; }
+	Actor* GetActor() { return actor; }
 
 	virtual void Update() {};
 };

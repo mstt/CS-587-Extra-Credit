@@ -22,21 +22,19 @@ public:
 private:
 	/* Data */
 	bool isActive;						// Flag indicating whether the game will continue or not
-	Actor* actors;						// Array of actors in memory (feel free to change this to another data structure)
+	Actor* actors;						// Array of actors in memory
+	ActorController** controllers;		// Array of controllers in memory
 	int actorCount;						// Count of actors in the actors array
 	int hunterCount;
 	int dodoCount;
 	int foxCount;
 
-	ActorController** controllers;
-
-	//World* world;
-
 	/* Functions */
 	void HandleFrame();					// Runs logic needed per-frame
 	void EndGame();						// Stops game execution
 
-	void PlaceActorInWorld(Actor* actor);	//Helper function called in Setup()
+	void PlaceActorInWorld(Actor* actor);		//Helper function called in Setup()
+	void RemoveActorFromWorld(Actor* actor);
 };
 
 #endif

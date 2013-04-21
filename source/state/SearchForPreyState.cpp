@@ -4,11 +4,23 @@
 /** Public **/
 void SearchForPreyState::Update()
 {
-	// TODO - query world, switch to AttackPreyState if prey is near
+	// Go to attack mode if actors are near
+	numActorsNear = World::GetInstance()->GetNumActorsNear(actor->x, actor->y, 2);
+
+	if(numActorsNear > 0)
+	{
+		status = EStateStatuses::ACTOR_NEAR;
+		nextState = "AttackPreyState";
+	}
+	else
+	{
+		status = EStateStatuses::NO_ACTORS_NEAR;
+	}
 }
 
 Point SearchForPreyState::GetNextPosition()
 {
+	// TODO - Think of smarter way to move
 	Point p;
 
 	while(true)

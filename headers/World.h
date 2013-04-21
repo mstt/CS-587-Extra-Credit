@@ -2,6 +2,7 @@
 #define __WORLD_H_
 
 #include "Actor.h"
+#include <vector>
 
 /*
 	World
@@ -11,6 +12,9 @@
 class World
 {
 private:
+	Actor** cells;
+	int cellsLength;
+
 	World() {}
 public:
 	/* Data */
@@ -24,17 +28,15 @@ public:
 	~World();
 
 	void Setup(int width, int height);
-	Actor* GetActorAt(int x, int y);
-	Actor** GetActorsNear(int x, int y, int range);
+	Actor* GetActorAt(const int x, const int y);
+	int GetNumActorsNear(int x, int y, int range);
+	int GetNumActorsOfTypeNear(int x, int y, int range, int type);
+	Actor** GetActorsNear(int x, int y, int range, int& size);
 	void AddActorToWorld(Actor* actor);
-	Actor* MoveActorInWorld(int x, int y, int newX, int newY);	//Returns actor if it was moved on top of
+	Actor* MoveActorInWorld(int x, int y, int newX, int newY);	//Returns actor that was consumed or NULL if nothing was consumed
 	void RemoveActorFromWorld(Actor* actor);
 	bool PointIsInWorld(int x, int y);
 	void printWorld();
-
-private:
-	Actor** cells;
-	int cellsLength;
 };
 
 #endif

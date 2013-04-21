@@ -21,11 +21,11 @@ void Game::Setup( SessionData* data )
 	foxCount   = data->actorCounts[EActorTypes::FOX];
 	actorCount = hunterCount + dodoCount + foxCount;
 
-	//Create controllers
+	//Create actor and controller arrays
+	actors = new Actor[actorCount];
 	controllers = new ActorController*[actorCount];
 
 	//Create actor array and place actors in world
-	actors = new Actor[actorCount];
 	int i, j;
 	for(i = 0, j = 0; i < hunterCount; i++, j++)
 	{
@@ -72,37 +72,32 @@ void Game::Execute()
 /** Private **/
 void Game::HandleFrame()
 {
+	//printf("handle frame");
 	int i, j;
 	for(i = 0; i < actorCount; i++)
 	{
+		if(controllers[i]->GetActor()->alive == false)
+			continue;
+
 		controllers[i]->Update();
 
 		int oldX = actors[i].x;
 		int oldY = actors[i].y;
 		Point p = controllers[i]->GetNextPosition();
-		/*while(World::GetInstance()->PointIsInWorld(p.x, p.y) == false)
-		{
-			p = controllers[i]->GetNextPosition();
-		}*/
 
+		//printf("\nmoving actor");
 		Actor* actorToRemove = World::GetInstance()->MoveActorInWorld(oldX, oldY, p.x, p.y);
+		//printf("\nmoved actor");
 		if(actorToRemove != NULL)
 		{
-			int i;
-			for(i = 0; i < actorCount; i++)
-			{
-				if(controllers[i]->getActor() == actorToRemove)
-				{
-				}
-			}
-			//delete actorToRemove;
+			RemoveActorFromWorld(actorToRemove);
 		}
 
 		//printf("\nmoved to %i,%i", actors[i].x, actors[i].y);
 	}
 
 	World::GetInstance()->printWorld();
-	cin >> j;
+	//cin >> j;
 }
 
 void Game::EndGame()
@@ -111,10 +106,11 @@ void Game::EndGame()
 
 	printf( "Game has ended" );
 
-	//Free memory
-	delete[] actors;
+	int i;
+	cin >> i;
 
-	// TODO
+
+	//Free memory TODO
 }
 
 void Game::PlaceActorInWorld(Actor* actor)
@@ -131,4 +127,11 @@ void Game::PlaceActorInWorld(Actor* actor)
 	actor->x = x;
 	actor->y = y;
 	World::GetInstance()->AddActorToWorld(actor);
+}
+
+void Game::RemoveActorFromWorld(Actor* actor)
+{
+	printf("\nkilling actor");
+	actor->alive = false;
+	--actorCount;
 }

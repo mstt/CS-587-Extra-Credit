@@ -5,6 +5,17 @@
 void AttackPreyState::Update()
 {
 	// TODO - move toward prey, switch to SearchForPreyState if prey is lost
+	numActorsNear = World::GetInstance()->GetNumActorsNear(actor->x, actor->y, 2);
+
+	if(numActorsNear > 0)
+	{
+		status = EStateStatuses::ACTOR_NEAR;
+		nextState = "SearchForPreyState";
+	}
+	else
+	{
+		status = EStateStatuses::NO_ACTORS_NEAR;
+	}
 }
 
 Point AttackPreyState::GetNextPosition()

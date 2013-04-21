@@ -1,21 +1,30 @@
 #include "../headers/state/WanderCautiouslyState.h"
 #include "../headers/World.h"
+#include "ActorTypes.h"
+#include <vector>
 
 /** Public **/
 void WanderCautiouslyState::Update()
 {
 	// Run away if other actors are near
-	Actor** actorsNear = World::GetInstance()->GetActorsNear(actor->x, actor->y, 2);
+	numActorsNear = World::GetInstance()->GetNumActorsOfTypeNear(actor->x, actor->y, 2, EActorTypes::HUNTER);
 
-	if(actorsNear != NULL)
+	if(numActorsNear > 0)
 	{
+		status = EStateStatuses::ACTOR_NEAR;
 		nextState = "RunAwayState";
-		delete[] actorsNear;
+	}
+	else
+	{
+		status = EStateStatuses::NO_ACTORS_NEAR;
 	}
 }
 
 Point WanderCautiouslyState::GetNextPosition()
 {
+	actor->GetPotentialMoves();
+
+
 	Point p;
 
 	while(true)
