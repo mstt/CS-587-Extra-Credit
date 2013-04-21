@@ -11,10 +11,6 @@ DodoController::DodoController(Actor* actor) : ActorController(actor)
 	currentState = stateMap["WanderState"];
 }
 
-void DodoController::Update()
-{
-}
-
 DodoController::~DodoController()
 {
 	delete stateMap["WanderState"];

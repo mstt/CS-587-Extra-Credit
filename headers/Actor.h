@@ -17,6 +17,7 @@ public:
 	/* Functions */
 	Actor() : x(0), y(0) { }
 	const bool DoesCollide( const Actor* actor );	// Determines if two actors are colliding
+	const bool CanMoveTo(const int x, const int y);
 };
 
 #endif

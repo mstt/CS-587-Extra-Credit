@@ -15,6 +15,13 @@ FoxController::FoxController(Actor* actor) : ActorController(actor)
 
 void FoxController::Update()
 {
+	currentState->Update();
+
+	//Change state if current state says you should
+	/*if(stateMap.find(currentState->getNextState()) != stateMap.end())
+	{
+		currentState = stateMap[currentState->getNextState()];
+	}*/
 }
 
 FoxController::~FoxController()

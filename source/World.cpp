@@ -40,6 +40,7 @@ Actor* World::GetActorAt(int x, int y)
 
 Actor** World::GetActorsNear(int x, int y, int range)
 {
+	return NULL;
 }
 
 void World::AddActorToWorld(Actor* actor)

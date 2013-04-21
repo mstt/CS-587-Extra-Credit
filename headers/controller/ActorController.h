@@ -30,7 +30,7 @@ public:
 
 	Actor* getActor() { return actor; }
 
-	virtual void Update() = 0;
+	virtual void Update() {};
 };
 
 #endif

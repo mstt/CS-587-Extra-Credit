@@ -16,7 +16,6 @@ public:
 	/* Functions */
 	DodoController(Actor* actor);
 	~DodoController();
-	void Update();
 };
 
 #endif

@@ -15,6 +15,13 @@ HunterController::HunterController(Actor* actor) : ActorController(actor)
 
 void HunterController::Update()
 {
+	currentState->Update();
+
+	//Change state if current state says you should
+	/*if(stateMap.find(currentState->getNextState()) != stateMap.end())
+	{
+		currentState = stateMap[currentState->getNextState()];
+	}*/
 }
 
 HunterController::~HunterController()
