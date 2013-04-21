@@ -1,7 +1,7 @@
 #ifndef __FOX_CONTROLLER_H_
 #define __FOX_CONTROLLER_H_
 
-#include "IController.h"
+#include "ActorController.h"
 #include "Actor.h"
 #include "Point.h"
 
@@ -10,16 +10,12 @@
 	======================
 	Controls an actor.
 */
-class FoxController : public IController
+class FoxController : public ActorController
 {
 public:
-	/* Data */
-	Actor* actor;
-
 	/* Functions */
-	FoxController(Actor* actor) : actor(actor) { }
+	FoxController(Actor* actor) : ActorController(actor) { }
 	Point GetNextPosition();
-	void MoveTo(int x, int y) { actor->x = x; actor->y = y; };
 };
 
 #endif

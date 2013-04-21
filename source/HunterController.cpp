@@ -18,9 +18,3 @@ Point HunterController::GetNextPosition()
 
 	return p;
 }
-
-/*void HunterController::MoveTo(int x, int y)
-{
-	actor->x = x;
-	actor->y = y;
-}*/

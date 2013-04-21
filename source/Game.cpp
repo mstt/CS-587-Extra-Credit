@@ -23,7 +23,7 @@ void Game::Setup( SessionData* data )
 	actorCount = hunterCount + dodoCount + foxCount;
 
 	//Create controllers
-	controllers = new IController*[actorCount];
+	controllers = new ActorController*[actorCount];
 
 	//Create actor array and place actors in world
 	actors = new Actor[actorCount];
@@ -32,7 +32,7 @@ void Game::Setup( SessionData* data )
 	{
 		actors[j].type = EActorTypes::HUNTER;
 		PlaceActorInWorld(&actors[j]);
-		controllers[j] = new HunterController(&actors[j]);	// TODO - change to HunterController
+		controllers[j] = new HunterController(&actors[j]);
 	}
 	for(i = 0; i < dodoCount; i++, j++)
 	{
@@ -44,7 +44,7 @@ void Game::Setup( SessionData* data )
 	{
 		actors[j].type = EActorTypes::FOX;
 		PlaceActorInWorld(&actors[j]);
-		controllers[j] = new FoxController(&actors[j]);	// TODO - change to FoxController
+		controllers[j] = new FoxController(&actors[j]);
 	}
 }
 
@@ -55,11 +55,11 @@ void Game::Execute()
 	// Begin activity
 	isActive = true;
 
+	world->printWorld();
+
 	// Continuous loop until the simulation has been told to terminate
 	while ( isActive )
 	{
-		world->printWorld();
-
 		HandleFrame();
 
 		// Game end condition
@@ -89,9 +89,20 @@ void Game::HandleFrame()
 		}
 
 		printf("\nmoving from %i,%i to %i,%i", oldX, oldY, p.x, p.y);
-		controllers[i]->MoveTo(p.x, p.y);
-		world->MoveActorInWorld(oldX, oldY, p.x, p.y);
-		printf("\nmoved");
+		//controllers[i]->MoveTo(p.x, p.y);
+
+		Actor* actorToRemove = world->MoveActorInWorld(oldX, oldY, p.x, p.y);
+		if(actorToRemove != NULL)
+		{
+			int i;
+			for(i = 0; i < actorCount; i++)
+			{
+				//if(controllers[i]->
+			}
+			//delete actorToRemove;
+		}
+
+		printf("\nmoved to %i,%i", actors[i].x, actors[i].y);
 	}
 
 	world->printWorld();

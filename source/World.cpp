@@ -1,4 +1,5 @@
 #include "../headers/World.h"
+#include "../headers/ActorTypes.h"
 #include <stdio.h>
 using namespace std;
 
@@ -33,15 +34,16 @@ void World::AddActorToWorld(Actor* actor)
 	cells[actor->x * worldWidth + actor->y] = actor;
 }
 
-void World::MoveActorInWorld(int x, int y, int newX, int newY)
+Actor* World::MoveActorInWorld(int x, int y, int newX, int newY)
 {
-	//If 
-	if(cells[newX * worldWidth + newY] != NULL)
-	{
-	}
-
+	Actor* actor = cells[newX * worldWidth + newY];
 	cells[newX * worldWidth + newY] = cells[x * worldWidth + y];
 	cells[x * worldWidth + y] = NULL;
+
+	cells[newX * worldWidth + newY]->x = newX;
+	cells[newX * worldWidth + newY]->y = newY;
+
+	return actor;
 }
 
 void World::RemoveActorFromWorld(Actor* actor)
@@ -72,7 +74,20 @@ void World::printWorld()
 			}
 			else
 			{
-				printf(" %i |", actor->type);
+				switch(actor->type)
+				{
+				case EActorTypes::HUNTER:
+					printf(" H |");
+					break;
+
+				case EActorTypes::DODO:
+					printf(" D |");
+					break;
+
+				case EActorTypes::FOX:
+					printf(" F |");
+					break;
+				}
 			}
 		}
 		printf("\n");

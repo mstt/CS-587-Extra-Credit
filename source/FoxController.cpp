@@ -18,9 +18,3 @@ Point FoxController::GetNextPosition()
 
 	return p;
 }
-
-/*void FoxController::MoveTo(int x, int y)
-{
-	actor->x = x;
-	actor->y = y;
-}*/

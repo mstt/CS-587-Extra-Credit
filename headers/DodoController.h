@@ -1,7 +1,7 @@
 #ifndef __DODO_CONTROLLER_H_
 #define __DODO_CONTROLLER_H_
 
-#include "IController.h"
+#include "ActorController.h"
 #include "Actor.h"
 #include "Point.h"
 
@@ -10,16 +10,12 @@
 	======================
 	Controls an actor. Moves randomly
 */
-class DodoController : public IController
+class DodoController : public ActorController
 {
 public:
-	/* Data */
-	Actor* actor;
-
 	/* Functions */
-	DodoController(Actor* actor) : actor(actor) { }
+	DodoController(Actor* actor) : ActorController(actor) { }
 	Point GetNextPosition();
-	void MoveTo(int x, int y) { actor->x = x; actor->y = y; };
 };
 
 #endif

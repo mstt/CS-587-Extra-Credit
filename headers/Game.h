@@ -5,7 +5,7 @@
 #include "SessionData.h"
 #include "Actor.h"
 #include "World.h"
-#include "IController.h"
+#include "ActorController.h"
 
 /*
 	Game
@@ -28,7 +28,7 @@ private:
 	int dodoCount;
 	int foxCount;
 
-	IController** controllers;
+	ActorController** controllers;
 
 	World* world;
 

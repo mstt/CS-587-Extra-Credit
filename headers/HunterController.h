@@ -1,7 +1,7 @@
 #ifndef __HUNTER_CONTROLLER_H_
 #define __HUNTER_CONTROLLER_H_
 
-#include "IController.h"
+#include "ActorController.h"
 #include "Actor.h"
 #include "Point.h"
 
@@ -10,16 +10,12 @@
 	======================
 	Controls an actor.
 */
-class HunterController : public IController
+class HunterController : public ActorController
 {
 public:
-	/* Data */
-	Actor* actor;
-
 	/* Functions */
-	HunterController(Actor* actor) : actor(actor) { }
+	HunterController(Actor* actor) : ActorController(actor) { }
 	Point GetNextPosition();
-	void MoveTo(int x, int y) { actor->x = x; actor->y = y; };
 };
 
 #endif

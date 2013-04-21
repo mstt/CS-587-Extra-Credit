@@ -18,9 +18,3 @@ Point DodoController::GetNextPosition()
 
 	return p;
 }
-
-/*void DodoController::MoveTo(int x, int y)
-{
-	actor->x = x;
-	actor->y = y;
-}*/

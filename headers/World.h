@@ -22,7 +22,7 @@ public:
 	void Setup();
 	Actor* GetActorAt(int x, int y);
 	void AddActorToWorld(Actor* actor);
-	void MoveActorInWorld(int x, int y, int newX, int newY);
+	Actor* MoveActorInWorld(int x, int y, int newX, int newY);	//Returns actor if it was moved on top of
 	void RemoveActorFromWorld(Actor* actor);
 	bool PointIsInWorld(int x, int y);
 	void printWorld();
