@@ -1,19 +1,24 @@
 #include "../headers/controller/HunterController.h"
+#include "../headers/state/State.h"
+#include "../headers/state/SearchForPreyState.h"
+#include "../headers/state/AttackPreyState.h"
 #include <stdlib.h>
 #include <stdio.h>
 
 /** Public **/
-Point HunterController::GetNextPosition()
+HunterController::HunterController(Actor* actor) : ActorController(actor)
 {
-	Point p;
-	p.x = actor->x + (rand() % 2 - 1);
-	p.y = actor->y + (rand() % 2 - 1);
+	stateMap["SearchForPreyState"] = new SearchForPreyState(actor);
+	stateMap["AttackPreyState"] = new AttackPreyState(actor);
+	currentState = stateMap["SearchForPreyState"];
+}
 
-	while(p.x == actor->x && p.y == actor->y)
-	{
-		p.x = actor->x + (rand() % 2 - 1);
-		p.y = actor->y + (rand() % 2 - 1);
-	}
+void HunterController::Update()
+{
+}
 
-	return p;
+HunterController::~HunterController()
+{
+	delete stateMap["SearchForPreyState"];
+	delete stateMap["AttackPreyState"];
 }

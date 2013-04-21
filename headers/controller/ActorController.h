@@ -3,6 +3,10 @@
 
 #include "../Actor.h"
 #include "../Point.h"
+#include "../state/State.h"
+#include <string>
+#include <map>
+using namespace std;
 
 /*
 	ActorController
@@ -13,12 +17,20 @@ class ActorController
 {
 protected:
 	Actor* actor;
+	State* currentState;
+	map<string, State*> stateMap;
+
 public:
 	/* Functions */
 	ActorController(Actor* actor) : actor(actor) {};
+	virtual ~ActorController() { stateMap.clear(); };
+
+	void MoveTo(int x, int y) { actor->x = x; actor->y = y; }
+	Point GetNextPosition() { return currentState->GetNextPosition(); }
+
 	Actor* getActor() { return actor; }
-	void MoveTo(int x, int y) { actor->x = x; actor->y = y; };
-	virtual Point GetNextPosition() = 0;
+
+	virtual void Update() = 0;
 };
 
 #endif

@@ -14,8 +14,9 @@ class FoxController : public ActorController
 {
 public:
 	/* Functions */
-	FoxController(Actor* actor) : ActorController(actor) { }
-	Point GetNextPosition();
+	FoxController(Actor* actor);
+	~FoxController();
+	void Update();
 };
 
 #endif

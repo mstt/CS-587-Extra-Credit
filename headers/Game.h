@@ -30,7 +30,7 @@ private:
 
 	ActorController** controllers;
 
-	World* world;
+	//World* world;
 
 	/* Functions */
 	void HandleFrame();					// Runs logic needed per-frame

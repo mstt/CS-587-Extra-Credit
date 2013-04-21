@@ -1,19 +1,24 @@
 #include "../headers/controller/FoxController.h"
+#include "../headers/state/State.h"
+#include "../headers/state/WanderCautiouslyState.h"
+#include "../headers/state/RunAwayState.h"
 #include <stdlib.h>
 #include <stdio.h>
 
 /** Public **/
-Point FoxController::GetNextPosition()
+FoxController::FoxController(Actor* actor) : ActorController(actor)
 {
-	Point p;
-	p.x = actor->x + (rand() % 2 - 1);
-	p.y = actor->y + (rand() % 2 - 1);
+	stateMap["WanderCautiouslyState"] = new WanderCautiouslyState(actor);
+	stateMap["RunAwayState"] = new RunAwayState(actor);
+	currentState = stateMap["WanderCautiouslyState"];
+}
 
-	while(p.x == actor->x && p.y == actor->y)
-	{
-		p.x = actor->x + (rand() % 2 - 1);
-		p.y = actor->y + (rand() % 2 - 1);
-	}
+void FoxController::Update()
+{
+}
 
-	return p;
+FoxController::~FoxController()
+{
+	delete stateMap["WanderCautiouslyState"];
+	delete stateMap["RunAwayState"];
 }

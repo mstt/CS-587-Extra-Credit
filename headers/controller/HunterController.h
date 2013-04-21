@@ -14,8 +14,9 @@ class HunterController : public ActorController
 {
 public:
 	/* Functions */
-	HunterController(Actor* actor) : ActorController(actor) { }
-	Point GetNextPosition();
+	HunterController(Actor* actor);
+	~HunterController();
+	void Update();
 };
 
 #endif

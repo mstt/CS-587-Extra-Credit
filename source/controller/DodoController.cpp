@@ -1,19 +1,21 @@
 #include "../headers/controller/DodoController.h"
+#include "../headers/state/State.h"
+#include "../headers/state/WanderState.h"
 #include <stdlib.h>
 #include <stdio.h>
 
 /** Public **/
-Point DodoController::GetNextPosition()
+DodoController::DodoController(Actor* actor) : ActorController(actor)
 {
-	Point p;
-	p.x = actor->x + (rand() % 2 - 1);
-	p.y = actor->y + (rand() % 2 - 1);
+	stateMap["WanderState"] = new WanderState(actor);
+	currentState = stateMap["WanderState"];
+}
 
-	while(p.x == actor->x && p.y == actor->y)
-	{
-		p.x = actor->x + (rand() % 2 - 1);
-		p.y = actor->y + (rand() % 2 - 1);
-	}
+void DodoController::Update()
+{
+}
 
-	return p;
+DodoController::~DodoController()
+{
+	delete stateMap["WanderState"];
 }

@@ -14,8 +14,9 @@ class DodoController : public ActorController
 {
 public:
 	/* Functions */
-	DodoController(Actor* actor) : ActorController(actor) { }
-	Point GetNextPosition();
+	DodoController(Actor* actor);
+	~DodoController();
+	void Update();
 };
 
 #endif

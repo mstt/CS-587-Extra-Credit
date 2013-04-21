@@ -3,8 +3,29 @@
 #include <stdio.h>
 using namespace std;
 
-void World::Setup()
+World* World::world = NULL;
+bool World::instanceFlag = false;
+
+World* World::GetInstance()
 {
+	if(!instanceFlag)
+	{
+		world = new World();
+		instanceFlag = true;
+		return world;
+	}
+	else
+	{
+		return world;
+	}
+}
+
+void World::Setup(int width, int height)
+{
+	worldWidth = width;
+	worldHeight = height;
+	cellsLength = width*height;
+
 	cells = new Actor*[cellsLength];
 	for(int i = 0; i < cellsLength; i++)
 	{
@@ -12,21 +33,13 @@ void World::Setup()
 	}
 }
 
-World::~World()
-{
-	for(int i = 0; i < cellsLength ; i++)
-	{
-		delete cells[i];
-		cells[i] = NULL;
-	}
-
-	delete[] cells;
-	cells = NULL;
-}
-
 Actor* World::GetActorAt(int x, int y)
 {
 	return cells[x * worldWidth + y];
+}
+
+Actor** World::GetActorsNear(int x, int y, int range)
+{
 }
 
 void World::AddActorToWorld(Actor* actor)
@@ -94,4 +107,18 @@ void World::printWorld()
 		printf("-----------------------------------------");
 		printf("\n");
 	}
+}
+
+World::~World()
+{
+	for(int i = 0; i < cellsLength ; i++)
+	{
+		delete cells[i];
+		cells[i] = NULL;
+	}
+
+	delete[] cells;
+	cells = NULL;
+
+	instanceFlag = false;
 }

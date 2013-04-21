@@ -12,9 +12,8 @@ void Game::Setup( SessionData* data )
 	// @TODO: parse information from SessionData for initial game state
 	printf( "Initializing game state" );
 
-	//Create world
-	world = new World(data->worldWidth, data->worldHeight);
-	world->Setup();
+	//Setup world
+	World::GetInstance()->Setup(data->worldWidth, data->worldHeight);
 	
 	//Set counts
 	hunterCount = data->actorCounts[EActorTypes::HUNTER];
@@ -55,7 +54,7 @@ void Game::Execute()
 	// Begin activity
 	isActive = true;
 
-	world->printWorld();
+	World::GetInstance()->printWorld();
 
 	// Continuous loop until the simulation has been told to terminate
 	while ( isActive )
@@ -76,15 +75,17 @@ void Game::HandleFrame()
 	int i, j;
 	for(i = 0; i < actorCount; i++)
 	{
+		controllers[i]->Update();
+
 		int oldX = actors[i].x;
 		int oldY = actors[i].y;
 		Point p = controllers[i]->GetNextPosition();
-		while(world->PointIsInWorld(p.x, p.y) == false)
+		while(World::GetInstance()->PointIsInWorld(p.x, p.y) == false)
 		{
 			p = controllers[i]->GetNextPosition();
 		}
 
-		Actor* actorToRemove = world->MoveActorInWorld(oldX, oldY, p.x, p.y);
+		Actor* actorToRemove = World::GetInstance()->MoveActorInWorld(oldX, oldY, p.x, p.y);
 		if(actorToRemove != NULL)
 		{
 			int i;
@@ -100,7 +101,7 @@ void Game::HandleFrame()
 		//printf("\nmoved to %i,%i", actors[i].x, actors[i].y);
 	}
 
-	world->printWorld();
+	World::GetInstance()->printWorld();
 	cin >> j;
 }
 
@@ -112,20 +113,22 @@ void Game::EndGame()
 
 	//Free memory
 	delete[] actors;
+
+	// TODO
 }
 
 void Game::PlaceActorInWorld(Actor* actor)
 {
-	int x = rand() % world->worldWidth;
-	int y = rand() % world->worldHeight;
+	int x = rand() % World::GetInstance()->worldWidth;
+	int y = rand() % World::GetInstance()->worldHeight;
 
-	while(world->GetActorAt(x, y) != NULL)
+	while(World::GetInstance()->GetActorAt(x, y) != NULL)
 	{
-		x = rand() % world->worldWidth;
-		y = rand() % world->worldHeight;
+		x = rand() % World::GetInstance()->worldWidth;
+		y = rand() % World::GetInstance()->worldHeight;
 	}
 
 	actor->x = x;
 	actor->y = y;
-	world->AddActorToWorld(actor);
+	World::GetInstance()->AddActorToWorld(actor);
 }

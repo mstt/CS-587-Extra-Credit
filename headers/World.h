@@ -10,17 +10,22 @@
 */
 class World
 {
+private:
+	World() {}
 public:
 	/* Data */
+	static World* world;
+	static bool instanceFlag;
 	int worldWidth;
 	int worldHeight;
 
 	/* Functions */
-	World(int width, int height) : worldWidth(width), worldHeight(height), cellsLength(width*height) { }
+	static World* GetInstance();
 	~World();
 
-	void Setup();
+	void Setup(int width, int height);
 	Actor* GetActorAt(int x, int y);
+	Actor** GetActorsNear(int x, int y, int range);
 	void AddActorToWorld(Actor* actor);
 	Actor* MoveActorInWorld(int x, int y, int newX, int newY);	//Returns actor if it was moved on top of
 	void RemoveActorFromWorld(Actor* actor);
