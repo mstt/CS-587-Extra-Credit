@@ -1,23 +1,23 @@
-#ifndef __DODO_CONTROLLER_H_
-#define __DODO_CONTROLLER_H_
+#ifndef __HUNTER_CONTROLLER_H_
+#define __HUNTER_CONTROLLER_H_
 
 #include "IController.h"
 #include "Actor.h"
 #include "Point.h"
 
 /*
-	DodoController
+	HunterController
 	======================
-	Controls an actor. Moves randomly
+	Controls an actor.
 */
-class DodoController : public IController
+class HunterController : public IController
 {
 public:
 	/* Data */
 	Actor* actor;
 
 	/* Functions */
-	DodoController(Actor* actor) : actor(actor) { }
+	HunterController(Actor* actor) : actor(actor) { }
 	Point GetNextPosition();
 	void MoveTo(int x, int y) { actor->x = x; actor->y = y; };
 };

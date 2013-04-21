@@ -5,6 +5,7 @@
 #include "SessionData.h"
 #include "Actor.h"
 #include "World.h"
+#include "IController.h"
 
 /*
 	Game
@@ -23,6 +24,11 @@ private:
 	bool isActive;						// Flag indicating whether the game will continue or not
 	Actor* actors;						// Array of actors in memory (feel free to change this to another data structure)
 	int actorCount;						// Count of actors in the actors array
+	int hunterCount;
+	int dodoCount;
+	int foxCount;
+
+	IController** controllers;
 
 	World* world;
 

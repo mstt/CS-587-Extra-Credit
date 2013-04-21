@@ -12,6 +12,7 @@ public:
 	/* Data */
 	int x;											// x coordinate in world space
 	int y;											// y coordinate in world space
+	int type;
 
 	/* Functions */
 	Actor() : x(0), y(0) { }

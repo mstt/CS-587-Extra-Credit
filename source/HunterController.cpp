@@ -1,9 +1,9 @@
-#include "../headers/DodoController.h"
+#include "../headers/HunterController.h"
 #include <stdlib.h>
 #include <stdio.h>
 
 /** Public **/
-Point DodoController::GetNextPosition()
+Point HunterController::GetNextPosition()
 {
 	printf("\ngetting position");
 	Point p;
@@ -19,7 +19,7 @@ Point DodoController::GetNextPosition()
 	return p;
 }
 
-/*void DodoController::MoveTo(int x, int y)
+/*void HunterController::MoveTo(int x, int y)
 {
 	actor->x = x;
 	actor->y = y;

@@ -22,6 +22,10 @@ public:
 	void Setup();
 	Actor* GetActorAt(int x, int y);
 	void AddActorToWorld(Actor* actor);
+	void MoveActorInWorld(int x, int y, int newX, int newY);
+	void RemoveActorFromWorld(Actor* actor);
+	bool PointIsInWorld(int x, int y);
+	void printWorld();
 
 private:
 	Actor** cells;

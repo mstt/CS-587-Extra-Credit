@@ -1,5 +1,10 @@
 #include "../headers/Game.h"
+#include "../headers/HunterController.h"
+#include "../headers/DodoController.h"
+#include "../headers/FoxController.h"
 #include <stdlib.h>
+#include <iostream>
+using namespace std;
 
 /** Public **/
 void Game::Setup( SessionData* data )
@@ -11,41 +16,50 @@ void Game::Setup( SessionData* data )
 	world = new World(data->worldWidth, data->worldHeight);
 	world->Setup();
 	
-	int hunterCount = data->actorCounts[EActorTypes::HUNTER];
-	int dodoCount  = data->actorCounts[EActorTypes::DODO];
-	int foxCount   = data->actorCounts[EActorTypes::FOX];
+	//Set counts
+	hunterCount = data->actorCounts[EActorTypes::HUNTER];
+	dodoCount  = data->actorCounts[EActorTypes::DODO];
+	foxCount   = data->actorCounts[EActorTypes::FOX];
 	actorCount = hunterCount + dodoCount + foxCount;
 
+	//Create controllers
+	controllers = new IController*[actorCount];
+
+	//Create actor array and place actors in world
 	actors = new Actor[actorCount];
-	int i = 0;
-	for(i; i < hunterCount; i++)
+	int i, j;
+	for(i = 0, j = 0; i < hunterCount; i++, j++)
 	{
-		PlaceActorInWorld(&actors[i]);
-
-		//assign actor a hunter controller
+		actors[j].type = EActorTypes::HUNTER;
+		PlaceActorInWorld(&actors[j]);
+		controllers[j] = new HunterController(&actors[j]);	// TODO - change to HunterController
 	}
-	for(i; i < hunterCount + dodoCount; i++)
+	for(i = 0; i < dodoCount; i++, j++)
 	{
-		PlaceActorInWorld(&actors[i]);
-
-		//assign actor a dodo controller
+		actors[j].type = EActorTypes::DODO;
+		PlaceActorInWorld(&actors[j]);
+		controllers[j] = new DodoController(&actors[j]);
 	}
-	for(i; i < hunterCount + dodoCount + foxCount; i++)
+	for(i = 0; i < foxCount; i++, j++)
 	{
-		PlaceActorInWorld(&actors[i]);
-
-		//assign actor a fox controller
+		actors[j].type = EActorTypes::FOX;
+		PlaceActorInWorld(&actors[j]);
+		controllers[j] = new FoxController(&actors[j]);	// TODO - change to FoxController
 	}
 }
 
 void Game::Execute()
 {
+	printf( "\nExecuting" );
+
 	// Begin activity
 	isActive = true;
 
 	// Continuous loop until the simulation has been told to terminate
 	while ( isActive )
 	{
+		world->printWorld();
+
 		HandleFrame();
 
 		// Game end condition
@@ -59,10 +73,29 @@ void Game::Execute()
 /** Private **/
 void Game::HandleFrame()
 {
-	for(int i = 0; i < actorCount; i++)
+	printf("\nhandle frame");
+	int i, j;
+	for(i = 0; i < actorCount; i++)
 	{
-		// move actors
+		printf("\ngetting next position for controller number %i", i);
+		int oldX = actors[i].x;
+		int oldY = actors[i].y;
+		Point p = controllers[i]->GetNextPosition();
+		while(world->PointIsInWorld(p.x, p.y) == false)
+		{
+			printf("\n x=%i, y=%i", p.x, p.y);
+			p = controllers[i]->GetNextPosition();
+			//cin >> j;
+		}
+
+		printf("\nmoving from %i,%i to %i,%i", oldX, oldY, p.x, p.y);
+		controllers[i]->MoveTo(p.x, p.y);
+		world->MoveActorInWorld(oldX, oldY, p.x, p.y);
+		printf("\nmoved");
 	}
+
+	world->printWorld();
+	cin >> j;
 }
 
 void Game::EndGame()
