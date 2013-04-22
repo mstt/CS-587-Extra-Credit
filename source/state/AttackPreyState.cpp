@@ -5,13 +5,14 @@
 /** Public **/
 void AttackPreyState::Update()
 {
-	// TODO - move toward prey, switch to SearchForPreyState if prey is lost
-	numActorsNear = World::GetInstance()->GetNumActorsNear(actor->x, actor->y, 2);
+	// Switch to SearchForPreyState if prey is lost
+	numActorsNear = World::GetInstance()->GetNumActorsNotOfTypeNear(actor->x, actor->y, 2, EActorTypes::HUNTER);
 
-	if(numActorsNear > 0)
+	if(numActorsNear == 0)
 	{
 		status = EStateStatuses::ACTOR_NEAR;
 		nextState = "SearchForPreyState";
+		//printf("\nswitching to state: %s", nextState.c_str());
 	}
 	else
 	{
@@ -21,10 +22,12 @@ void AttackPreyState::Update()
 
 Point AttackPreyState::GetNextPosition()
 {
+	//printf("\ngetting next position AttackPreyState: %i,%i", actor->x, actor->y);
 	Point p(actor->x, actor->y);
 
 	actor->GetPotentialMoves();
 	int numMoves = actor->potentialMoves.size();
+	//printf("\npotential moves: %i", numMoves);
 
 	// If no moves available, don't move
 	if(numMoves < 1)
@@ -33,7 +36,7 @@ Point AttackPreyState::GetNextPosition()
 	int i, bestMoveIndex, bestMoveScore;
 	for(i = 0, bestMoveIndex = 0, bestMoveScore = -9999; i < numMoves; i++)
 	{
-		int moveScore = evaluatePosition(actor->potentialMoves[i].x, actor->potentialMoves[i].y, 2);
+		int moveScore = EvaluatePosition(actor->potentialMoves[i].x, actor->potentialMoves[i].y, 2);
 
 		if(moveScore > bestMoveScore)
 		{
@@ -45,39 +48,49 @@ Point AttackPreyState::GetNextPosition()
 	return actor->potentialMoves[bestMoveIndex];
 }
 
-int AttackPreyState::evaluatePosition(int newX, int newY, int range)
+int AttackPreyState::EvaluatePosition(int newX, int newY, int range)
 {
+	//printf("\nevaluating position %i,%i", newX, newY);
 	int score = 0;
 
 	// If non-hunter is at position, it is best possible move
 	if(World::GetInstance()->GetActorAt(newX, newY) != NULL && World::GetInstance()->GetActorAt(newX, newY)->type != EActorTypes::HUNTER)
-		return 1000000;
-
-	int i, j;
-	for(i = actor->x - range; i < range; i++)
 	{
-		for(j = actor->y - range; j < range; j++)
-		{
-			//Avoid corners
-			if(World::GetInstance()->IsInCornerWithRange(i, j, 2))
-				score -= 1;
+		//printf("\nmoving to kill");
+		return 1000000;
+	}
 
-			if(World::GetInstance()->GetActorAt(i, j) != NULL)
+	//Avoid corners
+	if(World::GetInstance()->IsInCornerWithRange(newX, newY, 2))
+		score -= 1;
+
+	//printf("\nno actor is at position");
+	int i, j;
+	for(i = actor->x - range; i <= actor->x + range; i++)
+	{
+		for(j = actor->y - range; j <= actor->x + range; j++)
+		{
+			// If (i,j) has actor near (newX, newY)
+			if((i != actor->x || j != actor->y) && World::GetInstance()->PointIsInWorld(i, j) &&
+				World::GetInstance()->PointsAreWithinRange(i, j, newX, newY, range) && World::GetInstance()->GetActorAt(i, j) != NULL)
 			{
 				Actor* actorNear = World::GetInstance()->GetActorAt(i, j);
 
 				if(actorNear->type != EActorTypes::HUNTER)
 				{
+					//printf("\nprey within range");
 					score += 5;
 				}
 				else
 				{
+					//printf("\nno prey within range");
 					score -= 2;
 				}
 			}
 		}
 	}
 
+	//printf("\nevaluated position %i,%i: %i", newX, newY, score);
 	return score;
 }
 

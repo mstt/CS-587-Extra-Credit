@@ -18,9 +18,10 @@ void HunterController::Update()
 	currentState->Update();
 
 	//Change state if current state says you should
-	if(stateMap.find(currentState->getNextState()) != stateMap.end())
+	if(stateMap.find(currentState->GetNextState()) != stateMap.end())
 	{
-		currentState = stateMap[currentState->getNextState()];
+		currentState = stateMap[currentState->GetNextState()];
+		currentState->Setup();
 	}
 }
 

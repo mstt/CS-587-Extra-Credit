@@ -12,10 +12,6 @@ const bool Actor::DoesCollide( const Actor* actor )
 
 const bool Actor::CanMoveTo(const int x2, const int y2)
 {
-	int xDiff = abs(x - x2);
-	int yDiff = abs(y - y2);
-	bool isOneSpaceAway =  (xDiff == 1 || yDiff == 1) && (xDiff < 2 && yDiff < 2);
-
 	bool inWorld = World::GetInstance()->PointIsInWorld(x2, y2);
 
 	Actor* actorAtNewCell = World::GetInstance()->GetActorAt(x2, y2);
@@ -23,13 +19,13 @@ const bool Actor::CanMoveTo(const int x2, const int y2)
 	// Anything can move onto empty cell
 	if(actorAtNewCell == NULL)
 	{
-		return isOneSpaceAway && inWorld;
+		return inWorld;
 	}
 
 	// Hunters can't move onto hunters
 	if(type == EActorTypes::HUNTER)
 	{
-		return isOneSpaceAway && inWorld && actorAtNewCell->type != EActorTypes::HUNTER;
+		return inWorld && actorAtNewCell->type != EActorTypes::HUNTER;
 	}
 
 	// Dodos and foxes can't move onto other actors
@@ -41,11 +37,11 @@ int Actor::GetPotentialMoves()
 	potentialMoves.clear();
 
 	int i, j;
-	for(i = x - 1; i < x + 1; i++)
+	for(i = x - 1; i <= x + 1; i++)
 	{
-		for(j = y - 1; j < y + 1; j++)
+		for(j = y - 1; j <= y + 1; j++)
 		{
-			if(i != x && j != y && CanMoveTo(i, j))
+			if((i != x || j != y) && CanMoveTo(i, j))
 				potentialMoves.push_back(Point(i, j));
 		}
 	}

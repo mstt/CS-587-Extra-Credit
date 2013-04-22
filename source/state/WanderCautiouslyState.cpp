@@ -6,13 +6,14 @@
 /** Public **/
 void WanderCautiouslyState::Update()
 {
-	// Run away if other actors are near
+	// Run away if other hunters are near
 	numActorsNear = World::GetInstance()->GetNumActorsOfTypeNear(actor->x, actor->y, 2, EActorTypes::HUNTER);
 
 	if(numActorsNear > 0)
 	{
 		status = EStateStatuses::ACTOR_NEAR;
 		nextState = "RunAwayState";
+		//printf("\nswitching to state: %s", nextState.c_str());
 	}
 	else
 	{

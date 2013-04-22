@@ -1,6 +1,7 @@
 #include "../headers/World.h"
 #include "../headers/ActorTypes.h"
 #include <stdio.h>
+#include <math.h>
 using namespace std;
 
 World* World::world = NULL;
@@ -36,6 +37,7 @@ void World::Setup(int width, int height)
 Actor* World::GetActorAt(int x, int y)
 {
 	return cells[x * worldWidth + y];
+	//return cells[y * worldHeight + x];
 }
 
 int World::GetNumActorsNear(int x, int y, int range)
@@ -43,11 +45,11 @@ int World::GetNumActorsNear(int x, int y, int range)
 	int numActors = 0;
 	int i, j;
 
-	for(i = x - range; i < range; i++)
+	for(i = x - range; i <= x + range; i++)
 	{
-		for(j = y - range; j < range; j++)
+		for(j = y - range; j <= y + range; j++)
 		{
-			if(PointIsInWorld(i, j) && GetActorAt(i, j) != NULL)
+			if((i != x || j != y) && PointIsInWorld(i, j) && GetActorAt(i, j) != NULL)
 			{
 				++numActors;
 			}
@@ -62,11 +64,30 @@ int World::GetNumActorsOfTypeNear(int x, int y, int range, int type)
 	int numActors = 0;
 	int i, j;
 
-	for(i = x - range; i < range; i++)
+	for(i = x - range; i <= x + range; i++)
 	{
-		for(j = y - range; j < range; j++)
+		for(j = y - range; j <= y + range; j++)
 		{
-			if(PointIsInWorld(i, j) && GetActorAt(i, j) != NULL && GetActorAt(i, j)->type == type)
+			if((i != x || j != y) && PointIsInWorld(i, j) && GetActorAt(i, j) != NULL && GetActorAt(i, j)->type == type)
+			{
+				++numActors;
+			}
+		}
+	}
+
+	return numActors;
+}
+
+int World::GetNumActorsNotOfTypeNear(int x, int y, int range, int type)
+{
+	int numActors = 0;
+	int i, j;
+
+	for(i = x - range; i <= x + range; i++)
+	{
+		for(j = y - range; j <= y + range; j++)
+		{
+			if((i != x || j != y) && PointIsInWorld(i, j) && GetActorAt(i, j) != NULL && GetActorAt(i, j)->type != type)
 			{
 				++numActors;
 			}
@@ -82,11 +103,11 @@ Actor** World::GetActorsNear(int x, int y, int range, int& numActors)
 	int i, j;
 
 	//First find out how many actors are within range
-	for(i = x - range; i < range; i++)
+	for(i = x - range; i <= x + range; i++)
 	{
-		for(j = y - range; j < range; j++)
+		for(j = y - range; j <= y + range; j++)
 		{
-			if(PointIsInWorld(i, j) && GetActorAt(i, j) != NULL)
+			if((i != x || j != y) && PointIsInWorld(i, j) && GetActorAt(i, j) != NULL)
 			{
 				++numActors;
 			}
@@ -100,11 +121,11 @@ Actor** World::GetActorsNear(int x, int y, int range, int& numActors)
 
 	//Now add actors to array
 	int index = 0;
-	for(i = x - range; i < range; i++)
+	for(i = x - range; i <= x + range; i++)
 	{
-		for(j = y - range; j < range; j++)
+		for(j = y - range; j <= y + range; j++)
 		{
-			if(PointIsInWorld(i, j) && GetActorAt(i, j) != NULL)
+			if((i != x || j != y) && PointIsInWorld(i, j) && GetActorAt(i, j) != NULL)
 			{
 				actorsNear[index++] = GetActorAt(i, j);
 			}
@@ -121,6 +142,9 @@ void World::AddActorToWorld(Actor* actor)
 
 Actor* World::MoveActorInWorld(int x, int y, int newX, int newY)
 {
+	if(x == newX && y == newY)
+		return NULL;
+
 	//printf("\nmoving actor in world from %i,%i to %i,%i", x, y, newX, newY);
 	Actor* actorThatIsMoving = cells[x * worldWidth + y];
 	Actor* actorAtNewCell = cells[newX * worldWidth + newY];
@@ -171,6 +195,11 @@ bool World::PointIsInWorld(int x, int y)
 	return x >= 0 && x < worldWidth && y >= 0 && y < worldHeight;
 }
 
+bool World::PointsAreWithinRange(int x, int y, int x2, int y2, int range)
+{
+	return (abs(x - x2) <= range) && (abs(y - y2) <= range);
+}
+
 bool World::IsInCornerWithRange(int x, int y, int range)
 {
 	return (x < range && y < range) || (x < range && y >= worldHeight - range) ||
@@ -179,14 +208,18 @@ bool World::IsInCornerWithRange(int x, int y, int range)
 
 void World::printWorld()
 {
+	int i, j, k;
 	printf("\n");
-	printf("-----------------------------------------");
+
+	for(k = 0; k < worldWidth; k++)
+		printf("----");
+	printf("-");
+
 	printf("\n");
-	int i, j;
-	for(i = 0; i < worldWidth; i++)
+	for(i = 0; i < worldHeight; i++)
 	{
 		printf("|");
-		for(j = 0; j < worldHeight; j++)
+		for(j = 0; j < worldWidth; j++)
 		{
 			Actor* actor = GetActorAt(i, j);
 			if(actor == NULL)
@@ -195,6 +228,8 @@ void World::printWorld()
 			}
 			else
 			{
+				//printf(" A |");
+
 				switch(actor->type)
 				{
 				case EActorTypes::HUNTER:
@@ -212,7 +247,11 @@ void World::printWorld()
 			}
 		}
 		printf("\n");
-		printf("-----------------------------------------");
+		
+		for(k = 0; k < worldWidth; k++)
+			printf("----");
+		printf("-");
+
 		printf("\n");
 	}
 }

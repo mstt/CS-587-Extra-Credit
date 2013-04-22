@@ -29,6 +29,7 @@ public:
 	Point GetNextPosition() { return currentState->GetNextPosition(); }
 
 	Actor* GetActor() { return actor; }
+	string GetStateName() { return currentState->GetName(); }
 
 	virtual void Update() {};
 };

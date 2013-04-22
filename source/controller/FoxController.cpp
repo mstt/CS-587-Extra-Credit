@@ -17,10 +17,13 @@ void FoxController::Update()
 {
 	currentState->Update();
 
+	//printf("\nnext state: %s", currentState->GetNextState().c_str());
+
 	//Change state if current state says you should
-	if(stateMap.find(currentState->getNextState()) != stateMap.end())
+	if(stateMap.find(currentState->GetNextState()) != stateMap.end())
 	{
-		currentState = stateMap[currentState->getNextState()];
+		currentState = stateMap[currentState->GetNextState()];
+		currentState->Setup();
 	}
 }
 

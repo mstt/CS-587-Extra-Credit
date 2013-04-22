@@ -26,14 +26,14 @@ public:
 	State(Actor* actor, string name) : actor(actor), name(name), status(EStateStatuses::NO_ACTORS_NEAR), nextState(""), numActorsNear(0) {}
 	virtual ~State() {}
 
-	void Setup();
+	virtual void Setup() { nextState = ""; }
 	virtual void Update() {}
 	virtual Point GetNextPosition() = 0;
-	virtual int evaluatePosition(int newX, int newY, int range) { return 0; };		//Evaluates new position based off actors near current position
+	virtual int EvaluatePosition(int newX, int newY, int range) { return 0; };		//Evaluates new position based off actors near current position
 
-	string getName() const { return name; }
-	int getStatus() const { return status; }
-	string getNextState() const { return nextState; }
+	string GetName() const { return name; }
+	int GetStatus() const { return status; }
+	string GetNextState() const { return nextState; }
 };
 
 #endif

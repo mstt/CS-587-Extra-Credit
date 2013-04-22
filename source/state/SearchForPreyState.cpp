@@ -1,16 +1,18 @@
 #include "../headers/state/SearchForPreyState.h"
 #include "../headers/World.h"
+#include "ActorTypes.h"
 
 /** Public **/
 void SearchForPreyState::Update()
 {
 	// Go to attack mode if actors are near
-	numActorsNear = World::GetInstance()->GetNumActorsNear(actor->x, actor->y, 2);
+	numActorsNear = World::GetInstance()->GetNumActorsNotOfTypeNear(actor->x, actor->y, 2, EActorTypes::HUNTER);
 
 	if(numActorsNear > 0)
 	{
 		status = EStateStatuses::ACTOR_NEAR;
 		nextState = "AttackPreyState";
+		//printf("\nswitching to state: %s", nextState.c_str());
 	}
 	else
 	{
@@ -20,19 +22,15 @@ void SearchForPreyState::Update()
 
 Point SearchForPreyState::GetNextPosition()
 {
-	// TODO - Think of smarter way to move
-	Point p;
+	//printf("\ngetting next position SearchForPreyState"); 
 
-	while(true)
-	{
-		p.x = actor->x + (rand() % 3 - 1);
-		p.y = actor->y + (rand() % 3 - 1);
+	actor->GetPotentialMoves();
+	int numMoves = actor->potentialMoves.size();
 
-		if(World::GetInstance()->PointIsInWorld(p.x, p.y) && (p.x != actor->x || p.y != actor->y))
-			break;
-	}
-
-	return p;
+	if(numMoves > 0)
+		return actor->potentialMoves[rand() % numMoves];
+	else
+		return Point(actor->x, actor->y);
 }
 
 SearchForPreyState::~SearchForPreyState()

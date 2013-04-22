@@ -46,6 +46,15 @@ void Game::Setup( SessionData* data )
 		PlaceActorInWorld(&actors[j]);
 		controllers[j] = new FoxController(&actors[j]);
 	}
+
+	//Shuffle controllers array to randomize order that actors move
+	/*for(i = 0; i < actorCount; i++)
+	{
+		int r = i + (rand() % (actorCount-i));
+		ActorController* temp = controllers[i];
+		controllers[i] = controllers[r];
+		controllers[r] = temp;
+	}*/
 }
 
 void Game::Execute()
@@ -73,7 +82,6 @@ void Game::Execute()
 /** Private **/
 void Game::HandleFrame()
 {
-	//printf("handle frame");
 	int i, j;
 	for(i = 0; i < initialActorCount; i++)
 	{
@@ -86,15 +94,11 @@ void Game::HandleFrame()
 		int oldY = actors[i].y;
 		Point p = controllers[i]->GetNextPosition();
 
-		//printf("\nmoving actor");
 		Actor* actorToRemove = World::GetInstance()->MoveActorInWorld(oldX, oldY, p.x, p.y);
-		//printf("\nmoved actor");
 		if(actorToRemove != NULL)
 		{
 			RemoveActorFromWorld(actorToRemove);
 		}
-
-		//printf("\nmoved to %i,%i", actors[i].x, actors[i].y);
 	}
 
 	World::GetInstance()->printWorld();
